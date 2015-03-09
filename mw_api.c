@@ -16,6 +16,7 @@ void runMaster(int argc, char **argv, mw_api_spec *input){
     int workCount = 0;
     int resultCount = 0;
     int count = 0;
+    int i = 0;
 
     MPI_Comm_size(MPI_COMM_WORLD, &workerSize);
 
@@ -69,6 +70,16 @@ void runMaster(int argc, char **argv, mw_api_spec *input){
 
     input->result(resultCount, results);
     free(results);
+    //free the workList
+    i = 0;
+    while(workList[i] != NULL){
+        free(workList[i]);
+    }
+    
+    for(i = 0; i <= workCount; i++){
+        free(workList);
+        workList++;
+    }
     //turn down the workers
     for(rand = 1; rank < hostSize; rank++){
         MPI_Send(0,
